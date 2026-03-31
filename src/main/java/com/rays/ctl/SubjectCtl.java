@@ -17,24 +17,50 @@ import com.rays.form.SubjectForm;
 import com.rays.service.CourseServiceInt;
 import com.rays.service.SubjectServiceInt;
 
+/**
+ * REST controller for managing Subject-related operations in the ORS application.
+ * <p>
+ * Extends {@link BaseCtl} to inherit common CRUD and search endpoints,
+ * parameterized with {@link SubjectDTO}, {@link SubjectServiceInt},
+ * and {@link SubjectForm}. All endpoints are accessible under the
+ * {@code /Subject} base URL mapping.
+ * </p>
+ * <p>
+ * Additionally provides a preload endpoint to supply course dropdown
+ * data required by the Subject form on the client side.
+ * </p>
+ *
+ * @author Krati Trivedi
+ */
 @RestController
 @RequestMapping(value = "Subject")
 public class SubjectCtl extends BaseCtl<SubjectDTO, SubjectServiceInt, SubjectForm> {
-	
-	@Autowired
-	private CourseServiceInt courseService;
-	
-	@GetMapping("/preload")
-	public ORSResponse preload() {
-		
-		ORSResponse res = new ORSResponse(true);
-		
-		List<DropdownList> courseList = courseService.search(new CourseDTO(), userContext);
-		
-		res.addResult("courseList", courseList);
-		
-		return res;
-		
-	}
 
+    /**
+     * Service for retrieving Course data used to populate the course dropdown.
+     */
+    @Autowired
+    private CourseServiceInt courseService;
+
+    /**
+     * Preloads dropdown data required for the Subject form.
+     * <p>
+     * Retrieves and returns a list of all courses to be used as
+     * dropdown options on the client side.
+     * </p>
+     *
+     * @return an {@link ORSResponse} containing the course dropdown list
+     *         under the key {@code courseList}
+     */
+    @GetMapping("/preload")
+    public ORSResponse preload() {
+
+        ORSResponse res = new ORSResponse(true);
+
+        List<DropdownList> courseList = courseService.search(new CourseDTO(), userContext);
+
+        res.addResult("courseList", courseList);
+
+        return res;
+    }
 }

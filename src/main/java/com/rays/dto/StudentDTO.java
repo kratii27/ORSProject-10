@@ -8,127 +8,264 @@ import javax.persistence.Table;
 
 import com.rays.common.BaseDTO;
 
+/**
+ * Data Transfer Object (DTO) representing a Student entity in the ORS application.
+ * <p>
+ * Maps to the {@code ST_STUDENT} database table and holds student-related
+ * information such as enrollment number, personal details, contact information,
+ * and the associated college.
+ * </p>
+ *
+ * @author Krati Trivedi
+ */
 @Entity
 @Table(name = "ST_STUDENT")
 public class StudentDTO extends BaseDTO {
-	
-	@Column(name = "ENROLLMENT_NO", length = 50)
-	private String enrollmentNo;
-	
-	@Column(name = "FIRST_NAME", length = 50)
-	private String firstName;
-	
-	@Column(name = "LAST_NAME", length = 50)
-	private String lastName;
-	
-	@Column(name = "DOB")
-	private Date dob;
-	
-	@Column(name = "PHONE_NO", length = 50)
-	private String phoneNo;
-	
-	@Column(name = "EMAIL", length = 50)
-	private String email;
-	
-	@Column(name = "COLLEGE_ID")
-	private Long collegeId;
-	
-	@Column(name = "COLLEGE_NAME", length = 50)
-	private String collegeName;
 
-	
-	public String getEnrollmentNo() {
-		return enrollmentNo;
-	}
+    /**
+     * The unique enrollment number of the student.
+     */
+    @Column(name = "ENROLLMENT_NO", length = 50)
+    private String enrollmentNo;
 
-	public void setEnrollmentNo(String enrollmentNo) {
-		this.enrollmentNo = enrollmentNo;
-	}
+    /**
+     * The first name of the student.
+     */
+    @Column(name = "FIRST_NAME", length = 50)
+    private String firstName;
 
-	public String getFirstName() {
-		return firstName;
-	}
+    /**
+     * The last name of the student.
+     */
+    @Column(name = "LAST_NAME", length = 50)
+    private String lastName;
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    /**
+     * The date of birth of the student.
+     */
+    @Column(name = "DOB")
+    private Date dob;
 
-	public String getLastName() {
-		return lastName;
-	}
+    /**
+     * The contact phone number of the student.
+     */
+    @Column(name = "PHONE_NO", length = 50)
+    private String phoneNo;
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    /**
+     * The email address of the student.
+     */
+    @Column(name = "EMAIL", length = 50)
+    private String email;
 
-	public Date getDob() {
-		return dob;
-	}
+    /**
+     * The ID of the college the student is enrolled in.
+     */
+    @Column(name = "COLLEGE_ID")
+    private Long collegeId;
 
-	public void setDob(Date dob) {
-		this.dob = dob;
-	}
+    /**
+     * The name of the college the student is enrolled in.
+     */
+    @Column(name = "COLLEGE_NAME", length = 50)
+    private String collegeName;
 
-	public String getPhoneNo() {
-		return phoneNo;
-	}
+    /**
+     * Returns the enrollment number of the student.
+     *
+     * @return the enrollment number as a {@link String}
+     */
+    public String getEnrollmentNo() {
+        return enrollmentNo;
+    }
 
-	public void setPhoneNo(String phoneNo) {
-		this.phoneNo = phoneNo;
-	}
+    /**
+     * Sets the enrollment number of the student.
+     *
+     * @param enrollmentNo the enrollment number to set
+     */
+    public void setEnrollmentNo(String enrollmentNo) {
+        this.enrollmentNo = enrollmentNo;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    /**
+     * Returns the first name of the student.
+     *
+     * @return the first name as a {@link String}
+     */
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    /**
+     * Sets the first name of the student.
+     *
+     * @param firstName the first name to set
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public Long getCollegeId() {
-		return collegeId;
-	}
+    /**
+     * Returns the last name of the student.
+     *
+     * @return the last name as a {@link String}
+     */
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setCollegeId(Long collegeId) {
-		this.collegeId = collegeId;
-	}
+    /**
+     * Sets the last name of the student.
+     *
+     * @param lastName the last name to set
+     */
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public String getCollegeName() {
-		return collegeName;
-	}
+    /**
+     * Returns the date of birth of the student.
+     *
+     * @return the date of birth as a {@link Date}
+     */
+    public Date getDob() {
+        return dob;
+    }
 
-	public void setCollegeName(String collegeName) {
-		this.collegeName = collegeName;
-	}
+    /**
+     * Sets the date of birth of the student.
+     *
+     * @param dob the date of birth to set
+     */
+    public void setDob(Date dob) {
+        this.dob = dob;
+    }
 
-	@Override
-	public String getValue() {
-		// TODO Auto-generated method stub
-		return firstName + " " + lastName;
-	}
+    /**
+     * Returns the contact phone number of the student.
+     *
+     * @return the phone number as a {@link String}
+     */
+    public String getPhoneNo() {
+        return phoneNo;
+    }
 
-	@Override
-	public String getUniqueKey() {
-		// TODO Auto-generated method stub
-		return "enrollmentNo";
-	}
+    /**
+     * Sets the contact phone number of the student.
+     *
+     * @param phoneNo the phone number to set
+     */
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
 
-	@Override
-	public String getUniqueValue() {
-		// TODO Auto-generated method stub
-		return enrollmentNo;
-	}
+    /**
+     * Returns the email address of the student.
+     *
+     * @return the email address as a {@link String}
+     */
+    public String getEmail() {
+        return email;
+    }
 
-	@Override
-	public String getLabel() {
-		// TODO Auto-generated method stub
-		return "Enrollment No";
-	}
+    /**
+     * Sets the email address of the student.
+     *
+     * @param email the email address to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	@Override
-	public String getTableName() {
-		// TODO Auto-generated method stub
-		return "Student";
-	} 
+    /**
+     * Returns the ID of the college the student is enrolled in.
+     *
+     * @return the college ID as a {@link Long}
+     */
+    public Long getCollegeId() {
+        return collegeId;
+    }
 
+    /**
+     * Sets the ID of the college the student is enrolled in.
+     *
+     * @param collegeId the college ID to set
+     */
+    public void setCollegeId(Long collegeId) {
+        this.collegeId = collegeId;
+    }
+
+    /**
+     * Returns the name of the college the student is enrolled in.
+     *
+     * @return the college name as a {@link String}
+     */
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    /**
+     * Sets the name of the college the student is enrolled in.
+     *
+     * @param collegeName the college name to set
+     */
+    public void setCollegeName(String collegeName) {
+        this.collegeName = collegeName;
+    }
+
+    /**
+     * Returns the display value for dropdown list usage.
+     *
+     * @return the full name (first name + last name) as a {@link String}
+     */
+    @Override
+    public String getValue() {
+        // TODO Auto-generated method stub
+        return firstName + " " + lastName;
+    }
+
+    /**
+     * Returns the unique key attribute name used for duplicate checking.
+     *
+     * @return {@code "enrollmentNo"} as the unique key attribute
+     */
+    @Override
+    public String getUniqueKey() {
+        // TODO Auto-generated method stub
+        return "enrollmentNo";
+    }
+
+    /**
+     * Returns the value of the unique key attribute for this entity instance.
+     *
+     * @return the enrollment number as the unique key value
+     */
+    @Override
+    public String getUniqueValue() {
+        // TODO Auto-generated method stub
+        return enrollmentNo;
+    }
+
+    /**
+     * Returns the human-readable label for this entity.
+     *
+     * @return {@code "Enrollment No"} as the display label
+     */
+    @Override
+    public String getLabel() {
+        // TODO Auto-generated method stub
+        return "Enrollment No";
+    }
+
+    /**
+     * Returns the logical table name associated with this entity.
+     *
+     * @return {@code "Student"} as the table name
+     */
+    @Override
+    public String getTableName() {
+        // TODO Auto-generated method stub
+        return "Student";
+    }
 }

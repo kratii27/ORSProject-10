@@ -66,17 +66,11 @@ public class JasperCtl extends BaseCtl<MarksheetDTO, MarksheetServiceInt, Marksh
 
 		System.out.println("*** Jasper Ctl ***");
 
-		ORSResponse res = new ORSResponse();
-
-		ResourceBundle rb = ResourceBundle.getBundle("application");
-
 		Connection con = null;
 
 		java.io.InputStream jrxmlStream = getClass().getClassLoader().getResourceAsStream("report10.jrxml");
 
 		JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlStream);
-
-//      JasperReport jasperReport = JasperCompileManager.compileReport(rb.getString("jasper"));
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -84,15 +78,10 @@ public class JasperCtl extends BaseCtl<MarksheetDTO, MarksheetServiceInt, Marksh
 
 		con = ((SessionImpl) session).connection();
 
-//      con = ((SessionImpl) entityManager.unwrap(Session.class)).connection();
-
-//      Report fill karo
 		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, con);
 
-//      PDF generate karo
 		byte[] pdf = JasperExportManager.exportReportToPdf(jasperPrint);
 
-//      Browser me show karo
 		response.setContentType("application/pdf");
 
 		response.getOutputStream().write(pdf);

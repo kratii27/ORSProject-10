@@ -36,152 +36,234 @@ import com.rays.util.EmailBuilder;
 import com.rays.util.EmailMessage;
 import com.rays.util.EmailUtility;
 
+/**
+ * REST controller for managing User-related operations in the ORS application.
+ * <p>
+ * Extends {@link BaseCtl} to inherit common CRUD and search endpoints,
+ * parameterized with {@link UserDTO}, {@link UserServiceInt}, and {@link UserForm}.
+ * All endpoints are accessible under the {@code /User} base URL mapping.
+ * </p>
+ * <p>
+ * Provides additional endpoints for preloading role dropdown data, updating
+ * user profiles, changing passwords, and uploading or downloading profile pictures.
+ * </p>
+ *
+ * @author Krati Trivedi
+ */
 @RestController
 @RequestMapping(value = "User")
 public class UserCtl extends BaseCtl<UserDTO, UserServiceInt, UserForm> {
-	
-	@Autowired
-	RoleServiceInt roleService;
-	
 
-	@Autowired
-	AttachmentServiceInt attachmentService;
+    /**
+     * Service for retrieving Role data used to populate the role dropdown.
+     */
+    @Autowired
+    RoleServiceInt roleService;
 
-	
-	@GetMapping(value = "preload")
-	public ORSResponse preload() {
-		ORSResponse res = new ORSResponse(true);
+    /**
+     * Service for handling file attachment operations such as profile picture
+     * upload and download.
+     */
+    @Autowired
+    AttachmentServiceInt attachmentService;
 
-		RoleDTO dto = new RoleDTO();		
-		List<DropdownList> list = roleService.search(dto, userContext);
-		res.addResult("roleList", list);
-		
-		return res;
-	}
-	
-	@PostMapping("myProfile")
-	public ORSResponse myProfile(@RequestBody @Valid MyProfileForm form, BindingResult bindingResult) {
+    /**
+     * Preloads dropdown data required for the User form.
+     * <p>
+     * Retrieves and returns a list of all available roles to be used
+     * as dropdown options on the client side.
+     * </p>
+     *
+     * @return an {@link ORSResponse} containing the role dropdown list
+     *         under the key {@code roleList}
+     */
+    @GetMapping(value = "preload")
+    public ORSResponse preload() {
+        ORSResponse res = new ORSResponse(true);
 
-		ORSResponse res = validate(bindingResult);
+        RoleDTO dto = new RoleDTO();
+        List<DropdownList> list = roleService.search(dto, userContext);
+        res.addResult("roleList", list);
 
-		if (!res.isSuccess()) {
-			return res;
-		}
+        return res;
+    }
 
-		UserDTO dto = service.findByPk(userContext.getUserId(), userContext);
-		dto.setFirstName(form.getFirstName());
-		dto.setLastName(form.getLastName());
-		dto.setDob(form.getDob());
-		dto.setPhoneNo(form.getPhoneNo());
-		dto.setGender(form.getGender());
+    /**
+     * Updates the profile information of the currently authenticated user.
+     * <p>
+     * Validates the form first, then retrieves the existing user record and
+     * updates personal details such as first name, last name, date of birth,
+     * phone number, and gender.
+     * </p>
+     *
+     * @param form          the {@link MyProfileForm} containing updated profile
+     *                      details, validated via {@code @Valid}
+     * @param bindingResult the result of form validation
+     * @return an {@link ORSResponse} indicating success or failure of the
+     *         profile update operation
+     */
+    @PostMapping("myProfile")
+    public ORSResponse myProfile(@RequestBody @Valid MyProfileForm form, BindingResult bindingResult) {
 
-		service.update(dto, userContext);
-		
-		res.setSuccess(true);
-		res.addMessage("Your Profile updated successfully..!!");
+        ORSResponse res = validate(bindingResult);
 
-		return res;
-	}
+        if (!res.isSuccess()) {
+            return res;
+        }
 
-	@PostMapping("changePassword")
-	public ORSResponse changePassword(@RequestBody @Valid ChangePasswordForm form, BindingResult bindingResult) {
+        UserDTO dto = service.findByPk(userContext.getUserId(), userContext);
+        dto.setFirstName(form.getFirstName());
+        dto.setLastName(form.getLastName());
+        dto.setDob(form.getDob());
+        dto.setPhoneNo(form.getPhoneNo());
+        dto.setGender(form.getGender());
 
-		ORSResponse res = validate(bindingResult);
+        service.update(dto, userContext);
 
-		if (!res.isSuccess()) {
-			return res;
-		}
+        res.setSuccess(true);
+        res.addMessage("Your Profile updated successfully..!!");
 
-		UserDTO changedDto = service.changePassword(form.getLogin(), form.getOldPassword(), form.getNewPassword(),
-				userContext);
+        return res;
+    }
 
-		if (changedDto == null) {
-			res.setSuccess(false);
-			res.addMessage("Invalid old password");
-			return res;
-		}
-		
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("login", changedDto.getLogin());
-		map.put("password", changedDto.getPassword());
-		map.put("firstName", changedDto.getFirstName());
-		map.put("lastName", changedDto.getLastName());
+    /**
+     * Changes the password of the currently authenticated user.
+     * <p>
+     * Validates the form first, then delegates to the service to verify the old
+     * password and apply the new password. On success, a confirmation email is
+     * sent to the user's registered email address. If the old password is incorrect,
+     * an appropriate error message is returned.
+     * </p>
+     *
+     * @param form          the {@link ChangePasswordForm} containing the login,
+     *                      old password, and new password, validated via {@code @Valid}
+     * @param bindingResult the result of form validation
+     * @return an {@link ORSResponse} indicating whether the password was changed
+     *         successfully or if the old password was invalid
+     */
+    @PostMapping("changePassword")
+    public ORSResponse changePassword(@RequestBody @Valid ChangePasswordForm form, BindingResult bindingResult) {
 
-		String message = EmailBuilder.getChangePasswordMessage(map);
+        ORSResponse res = validate(bindingResult);
 
-		EmailMessage msg = new EmailMessage();
-		msg.setTo(changedDto.getLogin());
-		msg.setSubject("ORSProject-10 Password has been changed Successfully.");
-		msg.setMessage(message);
-		msg.setMessageType(EmailMessage.HTML_MSG);
+        if (!res.isSuccess()) {
+            return res;
+        }
 
-		EmailUtility.sendMail(msg);
+        UserDTO changedDto = service.changePassword(form.getLogin(), form.getOldPassword(), form.getNewPassword(),
+                userContext);
 
-		res.setSuccess(true);
-		res.addMessage("Password has been changed");
+        if (changedDto == null) {
+            res.setSuccess(false);
+            res.addMessage("Invalid old password");
+            return res;
+        }
 
-		return res;
-	}
-	
-	@PostMapping("/profilePic/{userId}")
-	public ORSResponse uploadPic(@PathVariable Long userId, @RequestParam("file") MultipartFile file,
-			HttpServletRequest req) {
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("login", changedDto.getLogin());
+        map.put("password", changedDto.getPassword());
+        map.put("firstName", changedDto.getFirstName());
+        map.put("lastName", changedDto.getLastName());
 
-		AttachmentDTO attachmentDto = new AttachmentDTO(file);
+        String message = EmailBuilder.getChangePasswordMessage(map);
 
-		attachmentDto.setDescription("profile pic");
+        EmailMessage msg = new EmailMessage();
+        msg.setTo(changedDto.getLogin());
+        msg.setSubject("ORSProject-10 Password has been changed Successfully.");
+        msg.setMessage(message);
+        msg.setMessageType(EmailMessage.HTML_MSG);
 
-		attachmentDto.setUserId(userId);
+        EmailUtility.sendMail(msg);
 
-		UserDTO userDto = service.findByPk(userId, userContext);
+        res.setSuccess(true);
+        res.addMessage("Password has been changed");
 
-		if (userDto.getImageId() != null && userDto.getImageId() > 0) {
+        return res;
+    }
 
-			attachmentDto.setId(userDto.getImageId());
+    /**
+     * Uploads a profile picture for the specified user.
+     * <p>
+     * Accepts a multipart file and saves it as an {@link AttachmentDTO}.
+     * If the user already has a profile picture, the existing attachment is
+     * updated; otherwise a new one is created and the user's image ID is set.
+     * </p>
+     *
+     * @param userId the ID of the user whose profile picture is being uploaded
+     * @param file   the {@link MultipartFile} containing the image to upload
+     * @param req    the {@link HttpServletRequest} for the current request
+     * @return an {@link ORSResponse} containing the saved image ID under
+     *         the key {@code imageId}
+     */
+    @PostMapping("/profilePic/{userId}")
+    public ORSResponse uploadPic(@PathVariable Long userId, @RequestParam("file") MultipartFile file,
+            HttpServletRequest req) {
 
-		}
+        AttachmentDTO attachmentDto = new AttachmentDTO(file);
 
-		Long imageId = attachmentService.save(attachmentDto, userContext);
+        attachmentDto.setDescription("profile pic");
 
-		if (userDto.getImageId() == null) {
+        attachmentDto.setUserId(userId);
 
-			userDto.setImageId(imageId);
+        UserDTO userDto = service.findByPk(userId, userContext);
 
-			service.update(userDto, userContext);
-		}
+        if (userDto.getImageId() != null && userDto.getImageId() > 0) {
 
-		ORSResponse res = new ORSResponse();
+            attachmentDto.setId(userDto.getImageId());
 
-		res.addResult("imageId", imageId);
-		res.setSuccess(true);
+        }
 
-		return res;
-	}
+        Long imageId = attachmentService.save(attachmentDto, userContext);
 
-	@GetMapping("/profilePic/{userId}")
-	public void downloadPic(@PathVariable Long userId, HttpServletResponse response) {
+        if (userDto.getImageId() == null) {
 
-		try {
+            userDto.setImageId(imageId);
 
-			UserDTO userDto = service.findByPk(userId, userContext);
+            service.update(userDto, userContext);
+        }
 
-			AttachmentDTO attachmentDTO = null;
+        ORSResponse res = new ORSResponse();
 
-			if (userDto != null) {
-				attachmentDTO = attachmentService.findByPk(userDto.getImageId(), userContext);
-			}
+        res.addResult("imageId", imageId);
+        res.setSuccess(true);
 
-			if (attachmentDTO != null) {
-				response.setContentType(attachmentDTO.getType());
-				OutputStream out = response.getOutputStream();
-				out.write(attachmentDTO.getDoc());
-				out.close();
-			} else {
-				response.getWriter().write("ERROR: File not found");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        return res;
+    }
 
+    /**
+     * Downloads and streams the profile picture of the specified user.
+     * <p>
+     * Retrieves the user's associated attachment and writes the image bytes
+     * directly to the HTTP response output stream with the appropriate content type.
+     * If no profile picture is found, an error message is written to the response.
+     * </p>
+     *
+     * @param userId   the ID of the user whose profile picture is to be downloaded
+     * @param response the {@link HttpServletResponse} used to stream the image data
+     */
+    @GetMapping("/profilePic/{userId}")
+    public void downloadPic(@PathVariable Long userId, HttpServletResponse response) {
+
+        try {
+
+            UserDTO userDto = service.findByPk(userId, userContext);
+
+            AttachmentDTO attachmentDTO = null;
+
+            if (userDto != null) {
+                attachmentDTO = attachmentService.findByPk(userDto.getImageId(), userContext);
+            }
+
+            if (attachmentDTO != null) {
+                response.setContentType(attachmentDTO.getType());
+                OutputStream out = response.getOutputStream();
+                out.write(attachmentDTO.getDoc());
+                out.close();
+            } else {
+                response.getWriter().write("ERROR: File not found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

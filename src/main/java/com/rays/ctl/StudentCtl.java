@@ -16,24 +16,50 @@ import com.rays.form.StudentForm;
 import com.rays.service.CollegeServiceInt;
 import com.rays.service.StudentServiceInt;
 
+/**
+ * REST controller for managing Student-related operations in the ORS application.
+ * <p>
+ * Extends {@link BaseCtl} to inherit common CRUD and search endpoints,
+ * parameterized with {@link StudentDTO}, {@link StudentServiceInt},
+ * and {@link StudentForm}. All endpoints are accessible under the
+ * {@code /Student} base URL mapping.
+ * </p>
+ * <p>
+ * Additionally provides a preload endpoint to supply college dropdown
+ * data required by the Student form on the client side.
+ * </p>
+ *
+ * @author Krati Trivedi
+ */
 @RestController
 @RequestMapping(value = "Student")
 public class StudentCtl extends BaseCtl<StudentDTO, StudentServiceInt, StudentForm> {
-	
-	@Autowired
-	public CollegeServiceInt collegeService;
-	
-	@GetMapping("/preload")
-	public ORSResponse preload() {
-		
-		ORSResponse res = new ORSResponse(true);
-		
-		List<DropdownList> collegeList = collegeService.search(new CollegeDTO(), userContext);
-		
-		res.addResult("collegeList", collegeList);
-		
-		return res;
-		
-	}
 
+    /**
+     * Service for retrieving College data used to populate the college dropdown.
+     */
+    @Autowired
+    public CollegeServiceInt collegeService;
+
+    /**
+     * Preloads dropdown data required for the Student form.
+     * <p>
+     * Retrieves and returns a list of all colleges to be used as
+     * dropdown options on the client side.
+     * </p>
+     *
+     * @return an {@link ORSResponse} containing the college dropdown list
+     *         under the key {@code collegeList}
+     */
+    @GetMapping("/preload")
+    public ORSResponse preload() {
+
+        ORSResponse res = new ORSResponse(true);
+
+        List<DropdownList> collegeList = collegeService.search(new CollegeDTO(), userContext);
+
+        res.addResult("collegeList", collegeList);
+
+        return res;
+    }
 }
