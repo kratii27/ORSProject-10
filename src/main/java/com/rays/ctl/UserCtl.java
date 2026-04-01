@@ -111,7 +111,7 @@ public class UserCtl extends BaseCtl<UserDTO, UserServiceInt, UserForm> {
             return res;
         }
 
-        UserDTO dto = service.findByPk(userContext.getUserId(), userContext);
+        UserDTO dto = service.findByLogin(userContext.getLoginId(), userContext);
         dto.setFirstName(form.getFirstName());
         dto.setLastName(form.getLastName());
         dto.setDob(form.getDob());
