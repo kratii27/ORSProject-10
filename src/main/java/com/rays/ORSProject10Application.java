@@ -41,7 +41,7 @@ public class ORSProject10Application {
     @Bean
     public WebMvcConfigurer corsConfig() {
         WebMvcConfigurer w = new WebMvcConfigurer() {
-            /**
+             /**
              * Registers CORS mappings to allow cross-origin requests
              * from permitted origins with the specified HTTP methods and headers.
              *
@@ -50,7 +50,7 @@ public class ORSProject10Application {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                .allowedOrigins("http://localhost:4200", "http://localhost:80")
+                .allowedOrigins("http://localhost:4200", "http://localhost:8080")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);

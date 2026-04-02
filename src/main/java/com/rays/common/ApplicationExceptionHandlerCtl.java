@@ -28,7 +28,7 @@ public class ApplicationExceptionHandlerCtl {
     public ResponseEntity<ORSResponse> handleDatabaseException(Exception e) {
 
         ORSResponse res = new ORSResponse(false);
-        res.addMessage("Database service is currently unavailable. Please try again later.");
+        res.addMessage("Database server down!!!! Please try again later.");
 
         return ResponseEntity
                 .status(HttpStatus.SERVICE_UNAVAILABLE)   // 503
