@@ -45,6 +45,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserDTO, UserDAOInt> implem
 	@Override
 	public UserDTO register(UserDTO dto, UserContext userContext) {
 		Long id = save(dto, userContext);
+		EmailService.sendUserRegistrationMail(dto.getLogin(), dto.getPassword());
 		dto.setId(id);
 		return dto;
 	}
@@ -90,6 +91,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserDTO, UserDAOInt> implem
 		if (dto == null) {
 			return null;
 		}
+		EmailService.sendForgotPasswordMail(dto.getLogin(), dto.getPassword(), dto.getFirstName(), dto.getLastName());
 		return dto;
 	}
 
@@ -108,6 +110,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserDTO, UserDAOInt> implem
 		if (dto != null && oldPassword.equals(dto.getPassword())) {
 			dto.setPassword(newPassword);
 			update(dto, userContext);
+			EmailService.sendChangePasswordMail(dto.getLogin(), dto.getPassword(), dto.getFirstName(), dto.getLastName());
 			return dto;
 		} else {
 			return null;

@@ -23,9 +23,6 @@ import com.rays.form.LoginForm;
 import com.rays.form.UserForm;
 import com.rays.form.UserRegistrationForm;
 import com.rays.service.UserServiceInt;
-import com.rays.util.EmailBuilder;
-import com.rays.util.EmailMessage;
-import com.rays.util.EmailUtility;
 
 /**
  * REST controller for handling authentication-related operations in the ORS application.
@@ -147,21 +144,6 @@ public class LoginCtl extends BaseCtl<UserDTO, UserServiceInt, UserForm> {
         res.setSuccess(true);
         res.addMessage("User has been registered successfully..!!");
 
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put("login", dto.getLogin());
-        map.put("password", dto.getPassword());
-
-        String message = EmailBuilder.getUserRegistrationMessage(map);
-
-        EmailMessage msg = new EmailMessage();
-
-        msg.setTo(dto.getLogin());
-        msg.setSubject("Registration is successful for ORSProject-10");
-        msg.setMessage(message);
-        msg.setMessageType(EmailMessage.HTML_MSG);
-
-        EmailUtility.sendMail(msg);
-
         return res;
     }
 
@@ -179,7 +161,7 @@ public class LoginCtl extends BaseCtl<UserDTO, UserServiceInt, UserForm> {
 
         session.invalidate();
 
-        res.addMessage("Logout successfully..!!");
+        res.addMessage("Logout successfully..!!!");
 
         return res;
     }
@@ -215,21 +197,6 @@ public class LoginCtl extends BaseCtl<UserDTO, UserServiceInt, UserForm> {
             res.addMessage("LoginId / Email not found.");
             return res;
         } else {
-            HashMap<String, String> map = new HashMap<String, String>();
-            map.put("login", fDto.getLogin());
-            map.put("password", fDto.getPassword());
-            map.put("firstName", fDto.getFirstName());
-            map.put("lastName", fDto.getLastName());
-
-            String message = EmailBuilder.getForgetPasswordMessage(map);
-
-            EmailMessage msg = new EmailMessage();
-            msg.setTo(fDto.getLogin());
-            msg.setSubject("ORSProject-10 Password Reset");
-            msg.setMessage(message);
-            msg.setMessageType(EmailMessage.HTML_MSG);
-
-            EmailUtility.sendMail(msg);
             res.setSuccess(true);
             res.addMessage("Hello " + fDto.getFirstName() + " " + fDto.getLastName()
                     + "..! Your password has been sent on your email.");

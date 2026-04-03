@@ -32,9 +32,7 @@ import com.rays.form.UserForm;
 import com.rays.service.AttachmentServiceInt;
 import com.rays.service.RoleServiceInt;
 import com.rays.service.UserServiceInt;
-import com.rays.util.EmailBuilder;
-import com.rays.util.EmailMessage;
-import com.rays.util.EmailUtility;
+
 
 /**
  * REST controller for managing User-related operations in the ORS application.
@@ -158,22 +156,6 @@ public class UserCtl extends BaseCtl<UserDTO, UserServiceInt, UserForm> {
             res.addMessage("Invalid old password");
             return res;
         }
-
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put("login", changedDto.getLogin());
-        map.put("password", changedDto.getPassword());
-        map.put("firstName", changedDto.getFirstName());
-        map.put("lastName", changedDto.getLastName());
-
-        String message = EmailBuilder.getChangePasswordMessage(map);
-
-        EmailMessage msg = new EmailMessage();
-        msg.setTo(changedDto.getLogin());
-        msg.setSubject("ORSProject-10 Password has been changed Successfully.");
-        msg.setMessage(message);
-        msg.setMessageType(EmailMessage.HTML_MSG);
-
-        EmailUtility.sendMail(msg);
 
         res.setSuccess(true);
         res.addMessage("Password has been changed");
