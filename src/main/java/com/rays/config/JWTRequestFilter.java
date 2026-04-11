@@ -73,49 +73,6 @@ public class JWTRequestFilter extends OncePerRequestFilter {
      * @throws ServletException if a servlet error occurs during filtering
      * @throws IOException      if an I/O error occurs during filtering
      */
-//    @Override
-//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-//            throws ServletException, IOException {
-//        final String authorizationHeader = request.getHeader("Authorization");
-//        System.out.println("JWT Token ======>>>>> " + authorizationHeader);
-//
-//        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-//            System.out.println("JWT Token ======>>>>> iiiiinnnnnn");
-//            String jwtToken = authorizationHeader.substring(7);
-//            try {
-//                String loginId = jwtUtil.extractLoginId(jwtToken);
-//                if (!jwtUtil.validateToken(jwtToken, loginId)) {
-//                    throw new Exception("Invalid JWT token");
-//                }
-//                if (loginId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-//                    UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(loginId);
-//                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-//                            userDetails, null, userDetails.getAuthorities());
-//                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-//                }
-//                UserDTO dto = new UserDTO();
-//                dto.setLogin(loginId);
-//                System.out.println("request filter: " + dto.getLogin());
-//                UserContext context = new UserContext(dto);
-//                // ThreadLocal me set
-//                UserContextHolder.setContext(context);
-//            } catch (CannotCreateTransactionException | DataAccessResourceFailureException | JDBCConnectionException e) {
-//                // DB is down
-//                response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE); // 503
-//                response.setContentType("application/json");
-//                response.getWriter().write("{\"result\":{\"message\":\"Database server down!! Please try again later.\"},\"success\":false}");
-//                return;
-//            } catch (Exception e) {
-//                // Token is invalid or expired
-//                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
-//                response.setContentType("application/json");
-//                response.getWriter().write("Token is invalid... plz login again..!!");
-//                return;
-//            }
-//        }
-//        filterChain.doFilter(request, response);
-//    }
     
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
