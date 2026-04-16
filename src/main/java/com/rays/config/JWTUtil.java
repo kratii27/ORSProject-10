@@ -107,7 +107,7 @@ public class JWTUtil {
         String[] parts = token.split("\\.");
         if (parts.length != 3) {
             throw new Exception("Invalid JWT token");
-        }
+        } 
 
         String payloadJson = decode(parts[1]);
         String tokenLoginId = extractField(payloadJson, "sub");
@@ -122,7 +122,7 @@ public class JWTUtil {
         }
 
         if (isTokenExpired(payloadJson)) {
-            throw new Exception("JWT token has expired");
+            throw new Exception("JWT token has been expired");
         }
 
         return true;

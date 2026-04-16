@@ -85,14 +85,11 @@ public class JWTRequestFilter extends OncePerRequestFilter {
             String jwtToken = authorizationHeader.substring(7);
             try {
                 String loginId = jwtUtil.extractLoginId(jwtToken);
-
-                // ✅ JWT already validates signature + expiry — no DB needed!
                 if (!jwtUtil.validateToken(jwtToken, loginId)) {
                     throw new Exception("Invalid JWT token");
                 }
 
                 if (loginId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    // ✅ Build authentication directly from token claims — no DB call!
                     String role = jwtUtil.extractRole(jwtToken);
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                             loginId, null,
@@ -104,7 +101,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
                 UserDTO dto = new UserDTO();
                 dto.setLogin(loginId);
-                dto.setId(jwtUtil.extractUserId(jwtToken)); // ✅ get userId from token too!
+                dto.setId(jwtUtil.extractUserId(jwtToken)); 
                 System.out.println("request filter: " + dto.getLogin());
                 UserContext context = new UserContext(dto);
                 UserContextHolder.setContext(context);
@@ -112,10 +109,10 @@ public class JWTRequestFilter extends OncePerRequestFilter {
                 // Token is invalid or expired
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
-                response.getWriter().write("Token is invalid... plz login again..!!");
+                response.getWriter().write(e.getMessage());
                 return;
             }
-        }
+        } 
         filterChain.doFilter(request, response);
     }
 }
