@@ -103,7 +103,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserDTO, UserDAOInt> implem
 	 * @param newPassword the new password to set
 	 * @param userContext the user context for the operation
 	 * @return the updated UserDTO if password change is successful, otherwise null
-	 */
+	 */	
 	@Override
 	public UserDTO changePassword(String login, String oldPassword, String newPassword, UserContext userContext) {
 		UserDTO dto = findByLogin(login, userContext);
