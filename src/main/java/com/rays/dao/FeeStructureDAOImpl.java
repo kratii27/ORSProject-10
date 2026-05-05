@@ -22,6 +22,7 @@ public class FeeStructureDAOImpl extends BaseDAOImpl<FeeStructureDTO> implements
 	@Autowired
 	CourseDAOInt courseDao;
 	
+	
 	@Override
 	public Class<FeeStructureDTO> getDTOClass() {
 		// TODO Auto-generated method stub

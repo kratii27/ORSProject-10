@@ -18,6 +18,8 @@ public class FeeStructureForm extends BaseForm<FeeStructureDTO> {
 	
 	private String courseName;
 	
+	
+	
 	@NotNull(message = "Base Fee is Required")
 	@Min(1)
 	private Double baseFee;

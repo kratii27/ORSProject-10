@@ -101,7 +101,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
                 UserDTO dto = new UserDTO();
                 dto.setLogin(loginId);
-                dto.setId(jwtUtil.extractUserId(jwtToken)); 
+                dto.setId(jwtUtil.extractUserId(jwtToken));
                 System.out.println("request filter: " + dto.getLogin());
                 UserContext context = new UserContext(dto);
                 UserContextHolder.setContext(context);

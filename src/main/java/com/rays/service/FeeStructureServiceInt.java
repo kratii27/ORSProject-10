@@ -5,4 +5,5 @@ import com.rays.dto.FeeStructureDTO;
 
 public interface FeeStructureServiceInt extends BaseServiceInt<FeeStructureDTO> {
 	
+	
 }

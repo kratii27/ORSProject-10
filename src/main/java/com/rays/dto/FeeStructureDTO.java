@@ -14,6 +14,8 @@ public class FeeStructureDTO extends BaseDTO {
 	@Column(name = "COURSE_ID")
 	private Long courseId;
 	
+	
+	
 	@Column(name = "COURSE_NAME", length = 50)
 	private String courseName;
 	

@@ -24,6 +24,8 @@ public class FeeStructureCtl extends BaseCtl<FeeStructureDTO, FeeStructureServic
 	@Autowired
 	private CourseServiceInt courseService;
 	
+	
+	
 	@GetMapping(value = "preload")
 	public ORSResponse preload() {
 		ORSResponse res = new ORSResponse(true);

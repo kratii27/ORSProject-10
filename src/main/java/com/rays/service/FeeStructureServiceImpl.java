@@ -15,4 +15,6 @@ import com.rays.dto.FeeStructureDTO;
 @Transactional
 public class FeeStructureServiceImpl extends BaseServiceImpl<FeeStructureDTO, FeeStructureDAOInt> implements FeeStructureServiceInt {
 	
+	
+	
 }
